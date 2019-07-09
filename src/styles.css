@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import 'assets/temp/vendor/font-awesome-4.7/css/font-awesome.min.css';
+@import 'assets/temp/vendor/font-awesome-5/css/fontawesome-all.min.css';
+@import 'assets/temp/vendor/mdi-font/css/material-design-iconic-font.min.css';
+@import 'assets/temp/vendor/bootstrap-4.1/bootstrap.min.css';
+@import 'assets/temp/vendor/animsition/animsition.min.css';
+@import 'assets/temp/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css';
+@import 'assets/temp/vendor/wow/animate.css';
+@import 'assets/temp/vendor/css-hamburgers/hamburgers.min.css';
+@import 'assets/temp/vendor/slick/slick.css';
+@import 'assets/temp/vendor/select2/select2.min.css';
+@import 'assets/temp/vendor/perfect-scrollbar/perfect-scrollbar.css';
