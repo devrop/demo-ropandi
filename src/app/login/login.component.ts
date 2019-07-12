@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth-service/auth-service.service';
 import { MatDialog } from '@angular/material';
 import { SimplePopUpComponent } from '../template/layout/simple-pop-up/simple-pop-up.component';
-
+import swal  from 'sweetalert2';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -22,7 +23,43 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+  onLogin2(){
+    console.log(this.model.username+' '+this.model.password);
+    Swal.fire({
+      title: 'Now Loading ...',
+      showConfirmButton: false,
+      timer: 1500,
+      preConfirm: () => {
+       Swal.showLoading();
+       return this.authService.callHttpSeverPost(this.model.username,this.model.password).subscribe(
+        (data: string) => {
+          let metaData = JSON.stringify(data);
+          let obj = JSON.parse(metaData);
+          console.log('status : ' + obj.status)
+          if(obj.status === 200){
+            this.setAuthentication(obj);
+            this.router.navigate(['contents']);
+          }else if(obj.status === 404){
+            swal.fire('Username atau Password yang dimasukkan salah');
+          }else {
+            swal.fire('Terjadi kesalahan di webservice');
+          }
+
+        }, (err) => {
+          console.log(err);
+          this.loading = false;
+      }
+        )
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+      })
+
+    }
+
+
+
   onLogin(){
+    this.loading = true;
     console.log(this.model.username+' '+this.model.password)
     this.authService.callHttpSeverPost(this.model.username,this.model.password).subscribe(
       (data: string) => {
@@ -32,10 +69,12 @@ export class LoginComponent implements OnInit {
         if(obj.status === 200){
           this.setAuthentication(obj);
           this.router.navigate(['contents']);
+          this.loading = false;
         }else if(obj.status === 404){
-          this.onOpenDialog();
+          swal.fire('Username atau Password yang dimasukkan salah');
+          this.loading = false;
         }else {
-          this.messageError ='Username atau Password Salah';
+          swal.fire('Terjadi kesalahan di webservice');
           this.loading = false;
         }
 
@@ -71,4 +110,6 @@ export class LoginComponent implements OnInit {
     });
 
   }
+
+
 }

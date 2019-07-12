@@ -41,4 +41,9 @@ export class UtilityService {
       return false;
     }
   }
+  static convertStringToJSON(data:string){
+    let metaData = JSON.stringify(data);
+    let obj = JSON.parse(metaData);
+    return obj;
+  }
 }

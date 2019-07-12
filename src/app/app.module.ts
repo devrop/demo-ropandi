@@ -19,6 +19,7 @@ import { SimplePopUpComponent } from './template/layout/simple-pop-up/simple-pop
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCoffee, faUser } from '@fortawesome/free-solid-svg-icons';
+import { CommonModule } from '@angular/common';
 @NgModule({
   declarations: [
     AppComponent,

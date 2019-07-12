@@ -1,0 +1,72 @@
+<div class="col-lg-6">
+  <div class="card">
+      <div class="card-header">
+          <strong>Basic Form</strong> Elements
+      </div>
+      <div class="card-body card-block">
+          <form (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="form-horizontal">
+              <div class="row form-group">
+                  <div class="col col-md-3">
+                      <label for="text-input" class=" form-control-label">Role Name</label>
+                  </div>
+                  <div class="col-12 col-md-9">
+                      <input type="text"  name="rolename" [(ngModel)] = "model.role_code" placeholder="Role Name" class="form-control">
+                      <small class="form-text text-muted">Massukan Role Name</small>
+                  </div>
+              </div>
+              <div class="row form-group">
+                  <div class="col col-md-3">
+                      <label for="select" class=" form-control-label">Can Add</label>
+                  </div>
+                  <div class="col-12 col-md-9">
+                      <select id="select" class="form-control" [(ngModel)] ="model.flagAdd" name ="add" >
+                          <option [value]="">Please select</option>
+                          <option *ngFor = "let data of datas" [value]="data.id">{{data.name}}</option>
+
+                      </select>
+                  </div>
+              </div>
+              <div class="row form-group">
+                  <div class="col col-md-3">
+                      <label for="select" class=" form-control-label">Can Edit</label>
+                  </div>
+                  <div class="col-12 col-md-9">
+                      <select name="edit" [(ngModel)] ="model.flagEdit"  class="form-control">
+                          <option [value]="">Please select</option>
+                          <option *ngFor = "let data of datas" [value]="data.id">{{data.name}}</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="row form-group">
+                  <div class="col col-md-3">
+                      <label for="select" class=" form-control-label">Can View</label>
+                  </div>
+                  <div class="col-12 col-md-9">
+                      <select  id="select" class="form-control" name="edit" [(ngModel)] ="model.flagView">
+                          <option [value]="">Please select</option>
+                          <option *ngFor = "let data of datas" [value]="data.id">{{data.name}}</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="row form-group">
+                  <div class="col col-md-3">
+                      <label for="select" class=" form-control-label">Can Delete</label>
+                  </div>
+                  <div class="col-12 col-md-9">
+                      <select name="edit" [(ngModel)] ="model.flagDelete" id="select" class="form-control">
+                          <option [value]="">Please select</option>
+                          <option *ngFor = "let data of datas" [value]="data.id">{{data.name}}</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="card-footer">
+                  <button [disabled]="loading" type="submit" class="btn btn-primary btn-sm">
+                      <i class="fa fa-dot-circle-o"></i> Submit
+                  </button>
+              </div>
+          </form>
+      </div>
+
+  </div>
+  </div>
+

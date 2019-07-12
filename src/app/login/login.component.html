@@ -31,6 +31,11 @@
             Login
           </button>
         </div>
+        <div *ngIf = "loading" class="text-center p-t-12">
+          <span class="txt1">
+            {{messageError}}
+          </span>
+        </div>
         <div class="text-center p-t-12">
           <span class="txt1">
             {{messageError}}
