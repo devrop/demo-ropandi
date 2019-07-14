@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { PrivilegeModel } from './privilege-menu.component';
-const url = 'http://demo-ropandi-backend.herokuapp.com/';
-//const url ='http://localhost:7899/';
+//const url = 'http://demo-ropandi-backend.herokuapp.com/';
+const url ='http://localhost:7899/';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json'
@@ -18,6 +18,15 @@ export class PrivilegeService {
 
   callData() {
     return this.http.get(url +'privileges').pipe(
+      map((response: any) => {
+        console.log('call privilege ' + response);
+        return response;
+      }
+      ));
+  }
+
+  findOneDataById(idParam:string){
+    return this.http.get(url +'privilege/'+idParam).pipe(
       map((response: any) => {
         console.log('call privilege ' + response);
         return response;

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PrivilegeModel, Option } from '../privilege-menu.component';
 import { PrivilegeService } from '../privilege.service';
 import swal  from 'sweetalert2';
+import { UtilityService } from 'src/app/utility/utility.service';
+import { SwalUtil } from 'src/app/utility/swal-util.service';
 
 
 const defaultA = 'Please select';
@@ -19,8 +21,10 @@ const swalWithBootstrapButtons = swal.mixin({
   styleUrls: ['./privilege-edit.component.css']
 })
 export class PrivilegeEditComponent implements OnInit {
+  loading = false;
   model = {
-    role_code : null,
+    id : null,
+    roleCode : null,
     flagAdd : null,
     flagEdit : null,
     flagView : null,
@@ -32,48 +36,17 @@ export class PrivilegeEditComponent implements OnInit {
   name = 'ok';
   datas = [
     new Option('1','Yes'),
-    new Option('0','No'),
+    new Option('0','No')
   ]
-  constructor(private router: ActivatedRoute,
-    private privilegeService : PrivilegeService
+  constructor(private activeRouter: ActivatedRoute,
+    private privilegeService : PrivilegeService,
+    private router:Router
     ) { }
 
   ngOnInit() {
-    swalWithBootstrapButtons.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.value) {
-        swalWithBootstrapButtons.fire(
-          'Deleted!',
-          'Your file has been deleted.',
-          'success'
-        )
-      } else if (
-        // Read more about handling dismissals
-        result.dismiss === swal.DismissReason.cancel
-      ) {
-        swalWithBootstrapButtons.fire(
-          'Cancelled',
-          'Your imaginary file is safe :)',
-          'error'
-        )
-      }
-    });
-
-
-
-    let id = this.router.snapshot.params['id'];
-    console.log('id is ' + id);
-    this.model.flagAdd =  defaultA;
-    this.model.flagEdit =  defaultA;
-    this.model.flagView =  defaultA;
-    this.model.flagDelete =  defaultA;
+    let id = this.activeRouter.snapshot.params['id'];
+    this.datas;
+    this.onFindOneById(id);
 
   }
 
@@ -89,57 +62,71 @@ export class PrivilegeEditComponent implements OnInit {
   }
   }
 
-  onSubmitPrivilege(){
-    console.log('hasil ' + this.model.flagAdd);
+  onFindOneById(idParam:string){
+    this.privilegeService.findOneDataById(idParam).subscribe(
+      (data:string) => {
+        console.log('data ' + data);
+        let metaData = JSON.stringify(data);
+        let obj = JSON.parse(metaData);
+
+        console.log('=========================================================');
+          if (obj.status == '200' || obj.status == 200) {
+               for(let data of obj.datas2){
+               this.model.id =  data.id;
+               this.model.roleCode = data.role_code;
+               this.model.flagAdd =  data.flag_add;
+               this.model.flagEdit =  data.flag_edit;
+               console.log(this.model.flagEdit);
+               this.model.flagView =  data.flag_view;
+               this.model.flagDelete =  data.flag_delete;
+               }
+
+
+          } else {
+
+          }
+
+      }, (err) => {
+
+      }
+    );
+  }
+
+  converToYesOrNo(value:string){
+    if(value ==='1'){
+      return 'Yes';
+    }else{
+      return 'No';
+    }
+  }
+
+  onSubmit(){
+    this.loading = true;
+    console.log('click here');
     let privilegeData = new PrivilegeModel('1',
-    this.model.role_code,
+    this.model.roleCode,
     this.model.flagAdd,
     this.model.flagEdit,
     this.model.flagView,
     this.model.flagDelete
     );
+    this.privilegeService.savePrivilege(privilegeData).subscribe(
+      (data:string) => {
+        let obj = UtilityService.convertStringToJSON(data);
+         if(obj.status ===200 || obj.status ==='200'){
+           this.loading = false;
+           SwalUtil.AlertSucces();
+           this.router.navigate(['contents/privileges']);
+         }else {
+          this.loading = false;
+          SwalUtil.AlertError();
+         }
+      },
+      (err) => {
 
-
-    /*
-
-    swal({
-      title: 'Information',
-      text: 'Are you sure for save this data?',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes'
-  }).then(function (result) {
-      if (result.value) {
-         // Helpers.setLoading(true);
-          //self.auditTrail.saveLog(menuAuditTrail, "Reject Content " + idNews);
-          this.privilegeService.savePrivilege(privilegeData).subscribe((data:string) => {
-            let metaData = JSON.stringify(data);
-            let obj = JSON.parse(metaData);
-              if (obj.status == '200' || obj.status == 200) {
-                  swal({
-                      title: 'Approve',
-                      text: 'Your file has succes.',
-                      type: 'success',
-                  }).then(function (result) {
-                    this.router.navigate(['contents/privileges']);
-                  });
-              } else {
-                  swal({
-                      title: 'Approve',
-                      text: 'Failed reject.',
-                      type: 'warning',
-                  }).then(function (result: any) {
-                    this.router.navigate(['contents/privileges']);
-                  });
-              }
-
-          }, (err) => {
-
-          });
       }
-  });
+    );
 
-*/
   }
 
 }
